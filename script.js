@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Function to open mobile menu
   function openMobileMenu() {
     mobileMenu.classList.add('active');
+    hamburgerButton.classList.add('active');
     
     // Trigger reflow to ensure the display change is applied
     mobileMenu.offsetHeight;
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Reverse the animations
     overlay.classList.remove('active');
     menuWrapper.classList.remove('active');
+    hamburgerButton.classList.remove('active');
     
     // Remove active class after animation completes
     setTimeout(() => {
