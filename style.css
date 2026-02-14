@@ -122,6 +122,48 @@
   .nav_button.is-hamburger {
     display: flex;
     cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: var(--colors--white);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .nav_button.is-hamburger::before,
+  .nav_button.is-hamburger::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background-color: var(--colors--white);
+    transition: all 0.3s ease;
+  }
+  
+  .nav_button.is-hamburger::before {
+    transform: translateY(-6px);
+  }
+  
+  .nav_button.is-hamburger::after {
+    transform: translateY(6px);
+  }
+  
+  .nav_button.is-hamburger:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Animate hamburger when menu is open */
+  .mobile-menu.active .nav_button.is-hamburger::before {
+    transform: rotate(45deg);
+  }
+  
+  .mobile-menu.active .nav_button.is-hamburger::after {
+    transform: rotate(-45deg);
   }
   
   .navbar_right .nav_menu-item {
@@ -131,4 +173,36 @@
   .navbar_right .nav_button:not(.is-hamburger) {
     display: none;
   }
+}
+
+/* Additional mobile menu enhancements */
+.mob-menu_link-item {
+  color: var(--colors--dark);
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.mob-menu_link-item:hover {
+  color: var(--colors--brand);
+}
+
+.icon-24.is-green {
+  color: var(--colors--brand);
+}
+
+/* Ensure proper z-index for mobile menu */
+.mob-menu {
+  z-index: 1001;
+}
+
+.mob-menu_holder {
+  background-color: var(--colors--white);
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth transitions for all elements */
+.mob-menu,
+.overlay,
+.mob-menu_wrapper {
+  transition: all 0.3s ease;
 }
