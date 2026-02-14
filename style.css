@@ -1,49 +1,69 @@
+/* Mobile menu base: hidden by default */
+.mob-menu {
+  display: none;
+}
+
+/* While opening/closing, keep layout rendered */
+.mob-menu.is-open,
+.mob-menu.is-closing {
+  display: flex;
+}
+
+/* Overlay animation control */
+.mob-menu .overlay {
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+.mob-menu.is-open .overlay {
+  animation: overlayFadeIn 250ms ease forwards;
+  pointer-events: auto;
+}
+.mob-menu.is-closing .overlay {
+  animation: overlayFadeOut 200ms ease forwards;
+  pointer-events: auto;
+}
+
+/* Panel slide animation control */
+.mob-menu .mob-menu_wrapper {
+  transform: translateX(100%);
+  will-change: transform;
+}
+.mob-menu.is-open .mob-menu_wrapper {
+  animation: slideIn 300ms ease forwards 100ms;
+}
+.mob-menu.is-closing .mob-menu_wrapper {
+  animation: slideOut 300ms ease forwards;
+}
+
+/* Keyframes */
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes overlayFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0%); }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0%); }
+  to { transform: translateX(100%); }
+}
+
+/* Show hamburger only under 992px, override any default */
 @media (max-width: 991px) {
-  .mob-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none; /* Hidden by default */
-    z-index: 1000;
-    overflow: hidden;
-  }
-
-  .mob-menu.open {
-    display: flex; /* Show when open */
-  }
-
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0; /* Hidden by default */
-    transition: opacity 0.3s ease-in-out;
-    cursor: pointer;
-  }
-
-  .mob-menu.open .overlay {
-    opacity: 1; /* Show when menu is open */
-  }
-
-  .mob-menu_wrapper {
-    position: absolute;
-    top: 0;
-    right: 0; /* Align to the right for RTL */
-    width: 80%; /* Adjust as needed */
-    max-width: 300px; /* Max width for the menu */
-    height: 100%;
-    background-color: white; /* Or any background color */
-    transform: translateX(100%); /* Hidden by default (off-screen to the right) */
-    transition: transform 0.3s ease-in-out;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  }
-
-  .mob-menu.open .mob-menu_wrapper {
-    transform: translateX(0%); /* Slide in from the right */
+  .nav_button.is-hamburger {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
   }
 }
