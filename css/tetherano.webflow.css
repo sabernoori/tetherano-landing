@@ -1555,7 +1555,7 @@ a {
     z-index: 10000;
     width: 100vw;
     height: 120vh;
-    display: none;
+    display: block;
     position: fixed;
     inset: 0% 0% auto;
   }
@@ -1602,6 +1602,19 @@ a {
 
   .mob-menu_logo {
     height: 4rem;
+  }
+
+  .mob-menu_close-btn {
+    background-color: var(--colors--gray-bg);
+    border-radius: 5rem;
+    justify-content: center;
+    align-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
   }
 }
 
@@ -1910,19 +1923,6 @@ a {
   .mob-menu_list {
     flex-flow: column;
     display: flex;
-  }
-
-  .mob-menu_close-btn {
-    background-color: var(--colors--gray-bg);
-    border-radius: 5rem;
-    justify-content: center;
-    align-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
   }
 }
 
