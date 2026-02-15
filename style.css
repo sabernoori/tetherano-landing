@@ -151,6 +151,80 @@
   }
 }
 
+/* Generic gradient hover: rotate background 180deg using a pseudo-element */
+.is-gradient {
+  position: relative;
+  overflow: hidden;
+}
+.is-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit; /* copy gradient/background from parent */
+  background-position: inherit;
+  background-size: inherit;
+  background-repeat: inherit;
+  transform: rotate(0deg);
+  transform-origin: 50% 50%;
+  transition: transform 480ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  pointer-events: none;
+  z-index: 0; /* behind content */
+}
+.is-gradient:hover::before {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-gradient::before { transition: none !important; }
+}
+
+/* Gradient button hover: rotate gradient 180deg and scale text */
+.nav_button.is-gradient {
+  position: relative;
+  overflow: hidden;
+}
+.nav_button.is-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit; /* copy the gradient */
+  background-position: inherit;
+  background-size: inherit;
+  background-repeat: inherit;
+  transform: rotate(0deg);
+  transform-origin: 50% 50%;
+  transition: transform 480ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.nav_button.is-gradient:hover::before {
+  transform: rotate(180deg);
+}
+
+.nav_button.is-gradient .button_text {
+  position: relative;
+  z-index: 1;
+  transform: scale(1);
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.nav_button.is-gradient:hover .button_text {
+  transform: scale(1.05);
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .nav_button.is-gradient::before,
+  .nav_button.is-gradient .button_text {
+    transition: none !important;
+  }
+}
+
 /* FAQ animations: open/close answer and rotate icon */
 .faq_item { --faq-duration: 320ms; --faq-ease: cubic-bezier(0.4, 0, 0.2, 1); }
 .faq_item { cursor: pointer; }
@@ -181,12 +255,12 @@
 }
 
 /* navbar item hover effect */
-.nav_menu-item {
+.nav_menu-item, .footer_link-holder {
   overflow: hidden;
   height: 1.5rem;
 }
 
-.nav_menu-text {
+.nav_menu-text, .footer_text-link {
   transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
   text-shadow: 0 2rem 0 white;
   height: 3rem;
@@ -194,6 +268,11 @@
 }
 
 .nav_menu-text.-wfp-hover,
-.nav_menu-text:hover {
+.footer_text-link.-wfp-hover,
+.nav_menu-text:hover,
+.footer_text-link:hover
+ {
   transform: translate(0px, -2rem);
 }
+
+
