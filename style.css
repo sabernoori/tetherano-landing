@@ -20,7 +20,7 @@
   position: absolute !important;
   inset: 0 !important;
   z-index: 0 !important;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.7);
 }
 .mob-menu.is-open .overlay {
   animation: overlayFadeIn 320ms cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
