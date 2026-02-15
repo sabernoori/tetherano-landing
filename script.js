@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobMenu = document.querySelector('.mob-menu');
   const overlay = mobMenu ? mobMenu.querySelector('.overlay') : null;
   const wrapper = mobMenu ? mobMenu.querySelector('.mob-menu_wrapper') : null;
+  const closeBtn = mobMenu ? mobMenu.querySelector('.mob-menu_close-btn') : null;
 
   log('DOM ready');
   log('Found elements:', {
@@ -21,30 +22,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const isMobile = () => window.matchMedia('(max-width: 991px)').matches;
   let isAnimating = false;
+  let phase = 'idle'; // 'idle' | 'opening' | 'open' | 'closing'
 
   function openMenu(evt) {
     log('Hamburger clicked', { isMobile: isMobile(), isAnimating, isOpen: mobMenu.classList.contains('is-open') });
+    // Restrict to mobile/tablet widths only
     if (!isMobile()) {
       log('Ignored: not under 992px');
       return;
     }
-    if (isAnimating || mobMenu.classList.contains('is-open')) {
-      log('Ignored: animation in progress or already open');
+    if (phase === 'opening' || phase === 'open') {
+      log('Ignored: already opening/open');
       return;
     }
     isAnimating = true;
+    phase = 'opening';
     mobMenu.classList.remove('is-closing');
     mobMenu.classList.add('is-open');
-    log('Menu state → is-open; display:', getComputedStyle(mobMenu).display);
+    log('Menu state → is-open; pre-frame display:', getComputedStyle(mobMenu).display);
     // Fallback: if display is still none due to cascade, force inline
     if (getComputedStyle(mobMenu).display === 'none') {
       mobMenu.style.display = 'flex';
       log('Forced inline display:flex as fallback');
     }
-    // When slide-in finishes, clear animating flag
+    // Log after the browser has applied styles (next frame)
+    requestAnimationFrame(() => {
+      log('Menu state → is-open; post-frame styles', {
+        mobMenuDisplay: getComputedStyle(mobMenu).display,
+        overlayOpacity: getComputedStyle(overlay).opacity,
+        wrapperTransform: getComputedStyle(wrapper).transform,
+      });
+    });
+    // When slide-in finishes, clear animating flag (only if still opening)
     wrapper.addEventListener('animationend', (e) => {
-      log('Wrapper animationend (open)', e.animationName);
+      log('Wrapper animationend (open-phase)', e.animationName, 'phase=', phase);
+      if (phase !== 'opening') return;
       isAnimating = false;
+      phase = 'open';
     }, { once: true });
     wrapper.addEventListener('animationstart', (e) => {
       log('Wrapper animationstart (open)', e.animationName);
@@ -53,26 +67,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function closeMenu(evt) {
     log('Overlay clicked', { isAnimating, isOpen: mobMenu.classList.contains('is-open') });
-    if (isAnimating || !mobMenu.classList.contains('is-open')) {
-      log('Ignored: animation in progress or already closed');
+    // Allow closing even if opening is in progress; block only if already closing or fully closed
+    if (phase === 'closing' || (!mobMenu.classList.contains('is-open') && phase !== 'opening')) {
+      log('Ignored: already closing or closed');
       return;
     }
     isAnimating = true;
+    phase = 'closing';
     mobMenu.classList.remove('is-open');
     mobMenu.classList.add('is-closing');
-    log('Menu state → is-closing; display:', getComputedStyle(mobMenu).display);
-    // After slide-out completes, hide container
-    wrapper.addEventListener('animationend', (e) => {
-      log('Wrapper animationend (close)', e.animationName);
+    log('Menu state → is-closing; pre-frame display:', getComputedStyle(mobMenu).display);
+    // Log after styles apply (next frame)
+    requestAnimationFrame(() => {
+      log('Menu state → is-closing; post-frame styles', {
+        mobMenuDisplay: getComputedStyle(mobMenu).display,
+        overlayOpacity: getComputedStyle(overlay).opacity,
+        wrapperTransform: getComputedStyle(wrapper).transform,
+      });
+    });
+    const finishClose = (source) => {
+      log('Finish close via', source);
       mobMenu.classList.remove('is-closing');
-      isAnimating = false;
-      // Remove forced inline fallback and rely on CSS base hidden
+      // Remove any inline fallback and force hide to guarantee base state
       if (mobMenu.style.display) {
         mobMenu.style.removeProperty('display');
-        log('Removed inline display fallback; now:', getComputedStyle(mobMenu).display);
       }
-      log('Menu state → closed; display should be none now:', getComputedStyle(mobMenu).display);
+      mobMenu.style.display = 'none';
+      isAnimating = false;
+      log('Menu state → closed; computed display:', getComputedStyle(mobMenu).display);
+      requestAnimationFrame(() => {
+        log('After-close computed styles', {
+          mobMenuDisplay: getComputedStyle(mobMenu).display,
+          overlayOpacity: getComputedStyle(overlay).opacity,
+          wrapperTransform: getComputedStyle(wrapper).transform,
+        });
+      });
+    };
+
+    // After slide-out completes, hide container (primary path, only if still closing)
+    wrapper.addEventListener('animationend', (e) => {
+      log('Wrapper animationend (close-phase)', e.animationName, 'phase=', phase);
+      if (phase !== 'closing') return;
+      finishClose('animationend');
     }, { once: true });
+
+    // Fallback if animationend doesn’t fire
+    const CLOSE_DURATION_MS = 320;
+    setTimeout(() => {
+      if (isAnimating) {
+        log('Close timeout fallback fired');
+        finishClose('timeout');
+      }
+    }, CLOSE_DURATION_MS);
     wrapper.addEventListener('animationstart', (e) => {
       log('Wrapper animationstart (close)', e.animationName);
     }, { once: true });
@@ -85,6 +131,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Overlay acts as close button
   overlay.addEventListener('click', closeMenu);
   log('Bound click → overlay');
+
+  // Close button handler
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMenu);
+    log('Bound click → closeBtn');
+  } else {
+    log('Close button not found');
+  }
 
   // If the viewport grows beyond mobile while menu is open, close it
   window.addEventListener('resize', () => {

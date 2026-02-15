@@ -1,6 +1,10 @@
 /* Mobile menu base: hidden by default */
 .mob-menu {
   display: none !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10000 !important;
+  align-items: stretch !important;
 }
 
 /* While opening/closing, keep layout rendered */
@@ -13,29 +17,34 @@
 .mob-menu .overlay {
   opacity: 0;
   pointer-events: none;
-  position: fixed;
-  inset: 0;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
   background: rgba(0, 0, 0, 0.35);
 }
 .mob-menu.is-open .overlay {
-  animation: overlayFadeIn 250ms ease forwards;
+  animation: overlayFadeIn 320ms cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
   pointer-events: auto;
 }
 .mob-menu.is-closing .overlay {
-  animation: overlayFadeOut 200ms ease forwards;
+  animation: overlayFadeOut 280ms cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
   pointer-events: auto;
 }
 
 /* Panel slide animation control */
 .mob-menu .mob-menu_wrapper {
-  transform: translateX(100%);
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 1 !important;
+  transform: translate3d(100%, 0, 0);
   will-change: transform;
 }
 .mob-menu.is-open .mob-menu_wrapper {
-  animation: slideIn 300ms ease forwards 100ms;
+  animation: slideIn 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards 60ms !important;
 }
 .mob-menu.is-closing .mob-menu_wrapper {
-  animation: slideOut 300ms ease forwards;
+  animation: slideOut 380ms cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
 }
 
 /* Keyframes */
@@ -50,20 +59,53 @@
 }
 
 @keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0%); }
+  from { transform: translate3d(100%, 0, 0); }
+  to { transform: translate3d(0%, 0, 0); }
 }
 
 @keyframes slideOut {
-  from { transform: translateX(0%); }
-  to { transform: translateX(100%); }
+  from { transform: translate3d(0%, 0, 0); }
+  to { transform: translate3d(100%, 0, 0); }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .mob-menu.is-open .overlay,
+  .mob-menu.is-closing .overlay,
+  .mob-menu.is-open .mob-menu_wrapper,
+  .mob-menu.is-closing .mob-menu_wrapper {
+    animation: none !important;
+    transition: none !important;
+  }
+  .mob-menu.is-open .overlay { opacity: 1; }
+  .mob-menu.is-closing .overlay { opacity: 0; }
+  .mob-menu.is-open .mob-menu_wrapper { transform: translate3d(0%, 0, 0); }
+  .mob-menu.is-closing .mob-menu_wrapper { transform: translate3d(100%, 0, 0); }
 }
 
 /* Show hamburger only under 992px, override any default */
 @media (max-width: 991px) {
+  /* Ensure mobile initial states and animations only under 992px */
+  .mob-menu {
+    display: none !important;
+  }
+  .mob-menu .overlay {
+    opacity: 0;
+  }
+  .mob-menu .mob-menu_wrapper {
+    transform: translate3d(100%, 0, 0);
+  }
   .nav_button.is-hamburger {
     display: flex !important;
     align-items: center;
     justify-content: center;
+  }
+}
+
+/* Hard-stop visibility on desktop widths even if classes are toggled */
+@media (min-width: 992px) {
+  .mob-menu.is-open,
+  .mob-menu.is-closing {
+    display: none !important;
   }
 }

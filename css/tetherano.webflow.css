@@ -1555,7 +1555,7 @@ a {
     z-index: 10000;
     width: 100vw;
     height: 120vh;
-    display: block;
+    display: none;
     position: fixed;
     inset: 0% 0% auto;
   }
@@ -1615,6 +1615,7 @@ a {
     position: absolute;
     top: 1.5rem;
     right: 1.5rem;
+    cursor: pointer;
   }
 }
 
