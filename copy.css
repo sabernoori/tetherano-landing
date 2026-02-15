@@ -1,0 +1,20 @@
+.nav_menu-item {
+  overflow: hidden;
+  height: 1.5rem;
+}
+
+.nav_menu-text {
+  transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+  text-shadow: 0 2.5rem 0 white;
+}
+
+.nav_menu-text.-wfp-hover,
+.nav_menu-text:hover {
+  transform: translate(0px, -1.5rem);
+}
+
+@media screen and (max-width: 991px) {
+  .nav_menu-item {
+    display: none;
+  }
+}
