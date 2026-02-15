@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     mobMenu.classList.remove('is-closing');
     mobMenu.classList.add('is-open');
     log('Menu state → is-open; display:', getComputedStyle(mobMenu).display);
+    // Fallback: if display is still none due to cascade, force inline
+    if (getComputedStyle(mobMenu).display === 'none') {
+      mobMenu.style.display = 'flex';
+      log('Forced inline display:flex as fallback');
+    }
     // When slide-in finishes, clear animating flag
     wrapper.addEventListener('animationend', (e) => {
       log('Wrapper animationend (open)', e.animationName);
@@ -61,6 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
       log('Wrapper animationend (close)', e.animationName);
       mobMenu.classList.remove('is-closing');
       isAnimating = false;
+      // Remove forced inline fallback and rely on CSS base hidden
+      if (mobMenu.style.display) {
+        mobMenu.style.removeProperty('display');
+        log('Removed inline display fallback; now:', getComputedStyle(mobMenu).display);
+      }
       log('Menu state → closed; display should be none now:', getComputedStyle(mobMenu).display);
     }, { once: true });
     wrapper.addEventListener('animationstart', (e) => {

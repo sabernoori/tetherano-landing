@@ -1,12 +1,12 @@
 /* Mobile menu base: hidden by default */
 .mob-menu {
-  display: none;
+  display: none !important;
 }
 
 /* While opening/closing, keep layout rendered */
 .mob-menu.is-open,
 .mob-menu.is-closing {
-  display: flex;
+  display: flex !important;
 }
 
 /* Overlay animation control */
