@@ -1,3 +1,5 @@
+// handling menu on mobile 
+
 document.addEventListener('DOMContentLoaded', () => {
   const log = (...args) => console.log('[MobileMenu]', ...args);
 
@@ -140,6 +142,32 @@ document.addEventListener('DOMContentLoaded', () => {
     log('Close button not found');
   }
 
+  // Close menu when any link inside the mobile menu is clicked
+  // Bind directly to existing anchors, and also add a delegation fallback
+  const menuAnchors = wrapper.querySelectorAll('a');
+  if (menuAnchors.length) {
+    menuAnchors.forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
+        log('Link clicked inside menu', { href: anchor.getAttribute('href') });
+        // Do not block navigation; just trigger close behavior
+        closeMenu(e);
+      });
+    });
+    log('Bound click → menu anchors', menuAnchors.length);
+  }
+  // Delegation fallback for dynamically injected links
+  wrapper.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+    // Avoid double-calling if a direct handler already ran
+    // (Heuristic: if "menuAnchors" includes this element, skip)
+    try {
+      if ([...menuAnchors].includes(link)) return;
+    } catch (_) {}
+    log('Delegated link click inside menu', { href: link.getAttribute('href') });
+    closeMenu(e);
+  });
+
   // If the viewport grows beyond mobile while menu is open, close it
   window.addEventListener('resize', () => {
     const mobile = isMobile();
@@ -156,5 +184,60 @@ document.addEventListener('DOMContentLoaded', () => {
     mobMenuDisplay: getComputedStyle(mobMenu).display,
     overlayOpacity: getComputedStyle(overlay).opacity,
     wrapperTransform: getComputedStyle(wrapper).transform,
+  });
+});
+
+// end of handling menu on mobile 
+
+// start faq handling
+// FAQ accordion animations: open/close the answer and rotate the icon
+document.addEventListener('DOMContentLoaded', () => {
+  const faqItems = Array.from(document.querySelectorAll('.faq_list .faq_item'));
+
+  const measureAndOpen = (item, answer) => {
+    // Set explicit max-height to allow smooth transition
+    const h = answer.scrollHeight;
+    answer.style.maxHeight = h + 'px';
+    item.classList.add('is-open');
+  };
+
+  const closeItem = (item, answer) => {
+    answer.style.maxHeight = '0px';
+    item.classList.remove('is-open');
+  };
+
+  faqItems.forEach((item) => {
+    const answer = item.querySelector('.pargraph[role="definition"]');
+    if (!answer) return;
+
+    // Initialize collapsed state
+    closeItem(item, answer);
+
+    // Toggle on click anywhere on the item
+    item.addEventListener('click', () => {
+      const isOpen = item.classList.contains('is-open');
+      if (isOpen) {
+        closeItem(item, answer);
+      } else {
+        // Optional accordion behavior: close other open items
+        faqItems.forEach((other) => {
+          if (other !== item && other.classList.contains('is-open')) {
+            const otherAns = other.querySelector('.pargraph[role="definition"]');
+            if (otherAns) {
+              otherAns.style.maxHeight = '0px';
+            }
+            other.classList.remove('is-open');
+          }
+        });
+        measureAndOpen(item, answer);
+      }
+    });
+  });
+
+  // Keep open items height responsive (e.g., on viewport changes)
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.faq_item.is-open .pargraph[role="definition"]').forEach((ans) => {
+      ans.style.maxHeight = ans.scrollHeight + 'px';
+    });
   });
 });

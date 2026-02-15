@@ -109,3 +109,32 @@
     display: none !important;
   }
 }
+
+/* FAQ animations: open/close answer and rotate icon */
+.faq_item { --faq-duration: 320ms; --faq-ease: cubic-bezier(0.4, 0, 0.2, 1); }
+.faq_item { cursor: pointer; }
+.faq_item .icon-24 svg {
+  transition: transform var(--faq-duration) var(--faq-ease);
+  transform: rotate(0deg);
+  transform-origin: 50% 50%;
+}
+.faq_item.is-open .icon-24 svg { transform: rotate(180deg); }
+
+/* Animate the answer block (role="definition") */
+.faq_item .pargraph[role="definition"] {
+  display: block;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height var(--faq-duration) var(--faq-ease), opacity var(--faq-duration) var(--faq-ease);
+}
+.faq_item.is-open .pargraph[role="definition"] {
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq_item .icon-24 svg,
+  .faq_item .pargraph[role="definition"] {
+    transition: none !important;
+  }
+}
