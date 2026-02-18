@@ -282,4 +282,11 @@
   direction: ltr;
 }
 
+/* Use flexbox to align the input and label to the right visually */
+#swap-form .form_input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 
