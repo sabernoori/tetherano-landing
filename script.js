@@ -241,3 +241,156 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// ========================
+// start swap form handling
+// ========================
+document.addEventListener('DOMContentLoaded', () => {
+  const RATE = 165000; // 1 tether = 165,000 tomans
+
+  const form = document.getElementById('swap-form');
+  if (!form) return;
+
+  const payInput = document.getElementById('pay');
+  const getInput = document.getElementById('get');
+  const swapBtn = form.querySelector('.swap_button');
+
+  const firstCurrencyText = form.querySelector('.form_input-holder.is-first .form_currency .dropdown_toggle-text');
+  const firstCurrencyImg = form.querySelector('.form_input-holder.is-first .form_currency img');
+  const secondCurrencyText = form.querySelector('.form_input-holder.is-second .form_currency .dropdown_toggle-text');
+  const secondCurrencyImg = form.querySelector('.form_input-holder.is-second .form_currency img');
+
+  if (!payInput || !getInput) return;
+
+  let payCurrency = (firstCurrencyText && firstCurrencyText.textContent.trim()) || 'تتر'; // default to tether
+  let getCurrency = (secondCurrencyText && secondCurrencyText.textContent.trim()) || 'تومان';
+  let isUpdating = false;
+
+  function updatePlaceholders() {
+    const equivalent = (165000).toLocaleString('en-US');
+    if (payCurrency === 'تتر') {
+      payInput.placeholder = '1';
+      getInput.placeholder = equivalent;
+    } else {
+      payInput.placeholder = equivalent;
+      getInput.placeholder = '1';
+    }
+  }
+
+  function parseNumericString(str) {
+    if (typeof str !== 'string') str = String(str || '');
+    return Number(str.replace(/,/g, '').trim());
+  }
+
+  function formatTether(val) {
+    const num = Number(val);
+    if (!Number.isFinite(num)) return '';
+    return num.toLocaleString('en-US', { useGrouping: true, maximumFractionDigits: 6 });
+  }
+
+  function formatToman(val) {
+    const num = Number(val);
+    if (!Number.isFinite(num)) return '';
+    return Math.round(num).toLocaleString('en-US');
+  }
+
+  function recomputeFromPay() {
+    if (isUpdating) return;
+    isUpdating = true;
+    const raw = payInput.value;
+    const payVal = raw.trim() === '' ? 1 : parseNumericString(raw);
+    if (Number.isFinite(payVal)) {
+      // Always format the pay input according to its currency
+      if (payCurrency === 'تتر') {
+        payInput.value = formatTether(payVal);
+        getInput.value = formatToman(payVal * RATE);
+      } else {
+        payInput.value = formatToman(payVal);
+        // pay in toman -> get in tether
+        getInput.value = formatTether(payVal / RATE);
+      }
+    } else {
+      getInput.value = '';
+    }
+    isUpdating = false;
+  }
+
+  function recomputeFromGet() {
+    if (isUpdating) return;
+    isUpdating = true;
+    const raw = getInput.value;
+    const getVal = raw.trim() === '' ? 1 : parseNumericString(raw);
+    if (Number.isFinite(getVal)) {
+      // Always format the get input according to its currency
+      if (getCurrency === 'تومان') {
+        getInput.value = formatToman(getVal);
+        // get is toman -> pay is tether
+        payInput.value = formatTether(getVal / RATE);
+      } else {
+        getInput.value = formatTether(getVal);
+        // get is tether -> pay is toman
+        payInput.value = formatToman(getVal * RATE);
+      }
+    } else {
+      payInput.value = '';
+    }
+    isUpdating = false;
+  }
+
+  payInput.addEventListener('input', recomputeFromPay);
+  getInput.addEventListener('input', recomputeFromGet);
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+  });
+
+  function setCurrencies(payCur, getCur) {
+    payCurrency = payCur;
+    getCurrency = getCur;
+    if (firstCurrencyText) firstCurrencyText.textContent = payCur;
+    if (secondCurrencyText) secondCurrencyText.textContent = getCur;
+    if (firstCurrencyImg && secondCurrencyImg) {
+      if (payCur === 'تتر') {
+        firstCurrencyImg.src = 'images/tether.avif';
+        firstCurrencyImg.alt = 'Tether Logo';
+        secondCurrencyImg.src = 'images/toman.avif';
+        secondCurrencyImg.alt = 'Iraninan Toman';
+      } else {
+        firstCurrencyImg.src = 'images/toman.avif';
+        firstCurrencyImg.alt = 'Iraninan Toman';
+        secondCurrencyImg.src = 'images/tether.avif';
+        secondCurrencyImg.alt = 'Tether Logo';
+      }
+    }
+    updatePlaceholders();
+  }
+
+  if (swapBtn) {
+    swapBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const newPay = payCurrency === 'تتر' ? 'تومان' : 'تتر';
+      const newGet = getCurrency === 'تومان' ? 'تتر' : 'تومان';
+      setCurrencies(newPay, newGet);
+      // Ensure a default 1 is present if empty
+      if (!payInput.value || payInput.value.trim() === '') {
+        payInput.value = newPay === 'تتر' ? formatTether(1) : formatToman(1);
+      }
+      // Recompute based on whichever field currently has focus/value
+      if (document.activeElement === payInput) {
+        recomputeFromPay();
+      } else if (document.activeElement === getInput) {
+        recomputeFromGet();
+      } else {
+        // default to recompute from pay
+        recomputeFromPay();
+      }
+    });
+  }
+
+  // initial compute and default value
+  updatePlaceholders();
+  if (!payInput.value || payInput.value.trim() === '') {
+    payInput.value = payCurrency === 'تتر' ? formatTether(1) : formatToman(1);
+  }
+  recomputeFromPay();
+});

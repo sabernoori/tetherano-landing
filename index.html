@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>خرید و فروش آنی تتر در تترانو</title>
-  <meta content="خرید و فروش تتر با بهترین قیمت در تترانو. تبدیل آنلاین تتر به ریال و لیر. پشتیبانی ۲۴ ساعته و تراکنش سریع و امن." name="description">
+  <meta content="خرید و فروش تتر با بهترین قیمت در تترانو. تبدیل آنلاین تتر به ریال. پشتیبانی ۲۴ ساعته و تراکنش سریع و امن." name="description">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
@@ -94,8 +94,8 @@
               </div>
             </div>
           </div>
-          <div class="hero_form-wrapper w-form">
-            <form id="email-form" name="email-form" data-name="Email Form" method="get" class="form_list" data-wf-page-id="6988456597e76a789392f6fd" data-wf-element-id="efbafab1-997c-be17-d4b8-0db5e92de559">
+          <div class="hero_form-wrapper">
+            <form id="swap-form" name="swap-form" method="get" action="#" class="form_list">
               <div class="swap_button">
                 <div class="icon-24"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewbox="0 0 24 24" fill="none">
                     <path d="M10.4502 7.46997C10.2602 7.46997 10.0702 7.4 9.9202 7.25L6.7302 4.06L3.54019 7.25C3.25019 7.54 2.7702 7.54 2.4802 7.25C2.1902 6.96 2.1902 6.48 2.4802 6.19L6.20023 2.46997C6.34023 2.32997 6.5302 2.25 6.7302 2.25C6.9302 2.25 7.12022 2.32997 7.26022 2.46997L10.9802 6.19C11.2702 6.48 11.2702 6.96 10.9802 7.25C10.8302 7.4 10.6402 7.46997 10.4502 7.46997Z" fill="currentColor"></path>
@@ -106,53 +106,21 @@
               </div>
               <div class="form_input-holder is-first">
                 <div class="form_input-wrapper">
-                  <div class="form_label">پرداخت میکنید</div><input class="form_input w-input" maxlength="256" name="pay" data-name="pay" placeholder="1" type="number" id="pay" required="">
+                  <div class="form_label">پرداخت میکنید</div><input class="form_input w-input" maxlength="256" name="pay" data-name="pay" placeholder="1" type="text" id="pay" required="">
                 </div>
-                <div data-hover="false" data-delay="0" class="from_dropdown w-dropdown">
-                  <div class="dropdown_toggle w-dropdown-toggle">
-                    <div class="dropdown_toggle-text">تتر</div><img src="images/tether.avif" loading="eager" alt="">
-                  </div>
-                  <nav class="dropdown_list w-dropdown-list">
-                    <div class="dropdown_item">
-                      <div class="dropdown_item-text">تتر</div><img src="images/tether.avif" loading="lazy" alt="">
-                    </div>
-                    <div class="dropdown_item">
-                      <div class="dropdown_item-text">تومان</div><img src="images/toman.avif" loading="lazy" alt="">
-                    </div>
-                    <div class="dropdown_item">
-                      <div class="dropdown_item-text">لیر</div><img src="images/lira.avif" loading="lazy" alt="">
-                    </div>
-                  </nav>
+                <div class="form_currency">
+                  <div class="dropdown_toggle-text">تتر</div><img src="images/tether.avif" loading="eager" alt="Tether Logo">
                 </div>
               </div>
               <div class="form_input-holder is-second">
                 <div class="form_input-wrapper">
-                  <div class="form_label">دریافت میکنید</div><input class="form_input w-input" maxlength="256" name="pay" data-name="pay" placeholder="1" type="number" id="pay" required="">
+                  <div class="form_label">دریافت میکنید</div><input class="form_input w-input" maxlength="256" name="get" data-name="get" placeholder="1" type="text" id="get" required="">
                 </div>
-                <div data-hover="false" data-delay="0" class="from_dropdown w-dropdown">
-                  <div class="dropdown_toggle w-dropdown-toggle">
-                    <div class="dropdown_toggle-text">تومان</div><img src="images/toman.avif" loading="lazy" alt="">
-                  </div>
-                  <nav class="dropdown_list w-dropdown-list">
-                    <div class="dropdown_item">
-                      <div class="dropdown_item-text">تتر</div><img src="images/tether.avif" loading="lazy" alt="">
-                    </div>
-                    <div class="dropdown_item">
-                      <div class="dropdown_item-text">تومان</div><img src="images/toman.avif" loading="lazy" alt="">
-                    </div>
-                    <div class="dropdown_item">
-                      <div class="dropdown_item-text">لیر</div><img src="images/lira.avif" loading="lazy" alt="">
-                    </div>
-                  </nav>
+                <div class="form_currency">
+                  <div class="dropdown_toggle-text">تومان</div><img src="images/toman.avif" loading="lazy" alt="Iraninan Toman">
                 </div>
-              </div><input type="submit" data-wait="لطفا منتظر باشید..." class="form_button w-button" value="ثبت سفارش خرید یا فروش">
+              </div><input type="submit" class="form_button w-button" value="ثبت سفارش" >
             </form>
-            <div class="w-form-done">
-              <div>Thank you! Your submission has been received!</div>
-            </div>
-            <div class="w-form-fail">
-              <div>Oops! Something went wrong while submitting the form.</div>
-            </div>
           </div>
         </div>
       </header>
@@ -346,11 +314,11 @@
             </a>
           </div>
           <div class="footer_links-list">
-            <a href="#" class="footer_link-holder is-privacy w-inline-block">
+            <a href="privacy-policy.html" class="footer_link-holder is-privacy w-inline-block">
               <div class="footer_text-link is-dark">حریم خصوصی</div>
             </a>
             <div class="footer_dot is-dark"></div>
-            <a href="#" class="footer_link-holder w-inline-block">
+            <a href="terms-of-use.html" class="footer_link-holder w-inline-block">
               <div class="footer_text-link is-dark">شرایط و قوانین</div>
             </a>
           </div>
@@ -369,7 +337,7 @@
         <div class="mob-menu_wrapper">
           <div class="mob-menu_holder">
             <div class="mob-menu_logo-wrapper">
-              <a href="index.html" aria-current="page" class="w-inline-block w--current"><img src="images/logo-full-black.svg" loading="lazy" alt="" class="mob-menu_logo"></a>
+              <a href="index.html" aria-current="page" class="w-inline-block w--current"><img src="images/logo-full-black.svg" loading="lazy" alt="Tetherano Logo" class="mob-menu_logo"></a>
             </div>
             <div class="mob-menu_list">
               <a href="index.html" aria-current="page" class="mob-menu_link-item w-inline-block w--current">
