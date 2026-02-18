@@ -277,6 +277,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function setInputModes() {
+    if (payCurrency === 'تتر') {
+      payInput.setAttribute('inputmode', 'decimal');
+    } else {
+      payInput.setAttribute('inputmode', 'numeric');
+    }
+    if (getCurrency === 'تتر') {
+      getInput.setAttribute('inputmode', 'decimal');
+    } else {
+      getInput.setAttribute('inputmode', 'numeric');
+    }
+  }
+
   function parseNumericString(str) {
     if (typeof str !== 'string') str = String(str || '');
     return Number(str.replace(/,/g, '').trim());
@@ -363,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     updatePlaceholders();
+    setInputModes();
   }
 
   if (swapBtn) {
@@ -389,6 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // initial compute and default value
   updatePlaceholders();
+  setInputModes();
   if (!payInput.value || payInput.value.trim() === '') {
     payInput.value = payCurrency === 'تتر' ? formatTether(1) : formatToman(1);
   }
