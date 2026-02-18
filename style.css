@@ -276,3 +276,10 @@
 }
 
 
+/* Swap form: right-align numbers in inputs while keeping LTR number flow */
+#swap-form .form_input {
+  text-align: right;
+  direction: ltr;
+}
+
+
